@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-
+import kotlinx.coroutines.flow.update
 
 
 class GameViewModel : ViewModel() {
@@ -49,10 +49,23 @@ class GameViewModel : ViewModel() {
     init {
         resetGame()
     }
-    fun updateUserGuess(guessedWord: String){
+
+    fun updateUserGuess(guessedWord: String) {
         userGuess = guessedWord
     }
 
     var userGuess by mutableStateOf("")
         private set
+
+    fun checkUserGuess() {
+
+        if (userGuess.equals(currentWord, ignoreCase = true)) {
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(isGuessedWordWrong = true)
+
+            }
+            updateUserGuess("")
+        }
     }
+}
